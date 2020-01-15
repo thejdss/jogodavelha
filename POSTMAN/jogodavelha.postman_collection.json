@@ -1,0 +1,95 @@
+{
+	"info": {
+		"_postman_id": "17f6a15c-c2ca-4f87-ae13-d493fe3958c4",
+		"name": "jogodavelha",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/game/:id/movement",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"id\" : \"ddd02ea0-37c3-11ea-b43c-95a9873d5124\",\r\n \"player\": \"o\",\r\n \"position\": {\r\n \"x\": 0,\r\n \"y\": 0\r\n }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/game/:id/movement",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"game",
+						":id",
+						"movement"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "dedbf520-37ca-11ea-9ac9-01320dd77777"
+						}
+					]
+				},
+				"description": "Rota que faz os movimentos, adicione o id do jogo no parametro id e mude o body com as informações da jogada."
+			},
+			"response": []
+		},
+		{
+			"name": "/game",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/game",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"game"
+					]
+				},
+				"description": "Rota que inicia o Jogo, chame ela para receber o id do jogo."
+			},
+			"response": []
+		},
+		{
+			"name": "/game/show",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/game/show",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"game",
+						"show"
+					]
+				},
+				"description": "Rota que devolve o estado atual do jogo. Confira a partida nela."
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
