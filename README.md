@@ -12,7 +12,9 @@ Dentro do projeto tem uma pasta chamada `POSTMAN` nela tem um arquivo json para 
 
 Existem três rotas:
  `POST /game - Começa o jogo e retorna a id necessária para jogar.`
+
  `POST /game/{id}/movement - Faz a jogada desejada usando um json e recebe a id do jogo como parametro.`
+ 
  `GET /game/show - Mostra a situação atual do jogo.`
 
 O body para a jogada é:
