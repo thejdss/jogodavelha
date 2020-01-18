@@ -16,7 +16,7 @@ Existem três rotas:
 
  `POST /game/{id}/movement` - Faz a jogada desejada usando um json e recebe a id do jogo como parametro.
  
- `GET /game/show` - Mostra a situação atual do jogo.
+ `POST /game/show` - Mostra a situação atual do jogo.
 
 O body para a jogada é:
 ```
