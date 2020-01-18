@@ -3,11 +3,10 @@ import Player from "../engine/models/PlayerModel";
 import GameEngine from "../engine/GameEngine";
 
 const app = express();
-const game = new GameEngine();
 
 app.post("/", async (req: any, res: any) => {
     try {
-        res.send(game.StartGame());
+        res.send(GameEngine.getInstance().StartGame());
 
         res.status(200);
     } catch (e) {
@@ -20,7 +19,7 @@ app.post("/:id/movement", async (req: any, res: any) => {
         var player: Player;
         player = req.body;
 
-        res.send(game.CountRound(player, req.params.id));
+        res.send(GameEngine.getInstance().CountRound(player, req.params.id));
 
         res.status(200);
     } catch (e) {
@@ -28,9 +27,9 @@ app.post("/:id/movement", async (req: any, res: any) => {
     }
 });
 
-app.get("/show", async (req: any, res: any) => {
+app.post("/show/:id", async (req: any, res: any) => {
     try {
-        res.send(game.ShowTikTakToe());
+        res.send(GameEngine.getInstance().ShowTikTakToe(req.params.id));
 
         res.status(200);
     } catch (e) {

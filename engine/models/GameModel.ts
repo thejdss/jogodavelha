@@ -3,7 +3,6 @@ export default class Game {
     public nextPlayer: string;
     public turns: number;
     public gameArray: string[];
-
     constructor(id: string, nextPlayer: string, gameArray: string[]) {
         this.id = id;
         this.turns = 9;

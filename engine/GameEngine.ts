@@ -3,7 +3,15 @@ import Game from "./models/GameModel";
 import Player from "./models/PlayerModel";
 
 export default class GameEngine {
-    public game: Game;
+    private static instance: GameEngine;
+    public games: Game[] = [];
+
+    public static getInstance(): GameEngine {
+        if (!GameEngine.instance) {
+            GameEngine.instance = new GameEngine();
+        }
+        return GameEngine.instance;
+    }
 
     public StartGame(): object {
         const randomNumber = Math.random();
@@ -15,53 +23,59 @@ export default class GameEngine {
             player = "o";
         }
 
-        this.game = new Game(uuid(), player, [" ", " ", " ", " ", " ", " ", " ", " ", " "]);
-        return { id: this.game.id, firstplayer: this.game.nextPlayer };
+        const newGame = new Game(uuid(), player, [" ", " ", " ", " ", " ", " ", " ", " ", " "]);
+        this.games.push(newGame);
+
+        return { id: newGame.id, firstplayer: newGame.nextPlayer };
     }
 
     public CountRound(player: Player, id: string): object {
-        // Confere se é a partida certa
-        if (this.game.id !== id) return { msg: "Partida não encontrada" };
+        for (let index = 0; index < this.games.length; index++) {
+            if (this.games[index].id === id) {
+                // Confere se é o jogador certo
+                if (this.games[index].nextPlayer !== player.player) return { msg: "Não é turno do jogador" };
 
-        // Confere se é o jogador certo
-        if (this.game.nextPlayer !== player.player) return { msg: "Não é turno do jogador" };
-
-         // Pega a posição para adicionar a letra
-        const pos = this.MovementUpdate(player.position.x, player.position.y);
+                // Pega a posição para adicionar a letra
+                const pos = this.MovementUpdate(player.position.x, player.position.y);
         
-        // Testa se já tem letra na posição
-        if (this.game.gameArray[pos] === "x" || this.game.gameArray[pos] === "o") return { msg: "Já foi feita uma jogada nesta posição" };
+                // Testa se já tem letra na posição
+                if (this.games[index].gameArray[pos] === "x" || this.games[index].gameArray[pos] === "o") return { msg: "Já foi feita uma jogada nesta posição" };
         
-        // Testa se a posição é válida
-        if (pos > 8) return { msg: "Posição inválida " };
+                // Testa se a posição é válida
+                if (pos > 8) return { msg: "Posição inválida " };
 
-        // Adiciona a letra na posição
-        this.game.gameArray[pos] = player.player;
+                // Adiciona a letra na posição
+                this.games[index].gameArray[pos] = player.player;
 
-        //Reduz número de rodadas possíveis
-        this.game.turns --;
+                //Reduz número de rodadas possíveis
+                this.games[index].turns --;
 
-        // Troca de player depois da jogada
-        if (this.game.nextPlayer === "x") {
-            this.game.nextPlayer = "o";
-        } else { this.game.nextPlayer = "x"; }
+                // Troca de player depois da jogada
+                if (this.games[index].nextPlayer === "x") {
+                    this.games[index].nextPlayer = "o";
+                } else { this.games[index].nextPlayer = "x"; }
 
-        return this.TestRound(player.player);
+                return this.TestRound(this.games[index], player.player, index);
+            }
+        }
+        return { msg: "Essa partida não existe" };
     }
 
-    public TestRound(l: string): object {
-        if (this.game.gameArray[0] === l && this.game.gameArray[3] === l && this.game.gameArray[6] === l ||
-            this.game.gameArray[1] === l && this.game.gameArray[4] === l && this.game.gameArray[7] === l ||
-            this.game.gameArray[2] === l && this.game.gameArray[5] === l && this.game.gameArray[8] === l ||
-            this.game.gameArray[0] === l && this.game.gameArray[1] === l && this.game.gameArray[2] === l ||
-            this.game.gameArray[3] === l && this.game.gameArray[4] === l && this.game.gameArray[5] === l ||
-            this.game.gameArray[6] === l && this.game.gameArray[7] === l && this.game.gameArray[8] === l ||
-            this.game.gameArray[0] === l && this.game.gameArray[4] === l && this.game.gameArray[8] === l ||
-            this.game.gameArray[2] === l && this.game.gameArray[4] === l && this.game.gameArray[6] === l) {
+    public TestRound(game: Game, l: string, index: number): object {
+        if (game.gameArray[0] === l && game.gameArray[3] === l && game.gameArray[6] === l ||
+            game.gameArray[1] === l && game.gameArray[4] === l && game.gameArray[7] === l ||
+            game.gameArray[2] === l && game.gameArray[5] === l && game.gameArray[8] === l ||
+            game.gameArray[0] === l && game.gameArray[1] === l && game.gameArray[2] === l ||
+            game.gameArray[3] === l && game.gameArray[4] === l && game.gameArray[5] === l ||
+            game.gameArray[6] === l && game.gameArray[7] === l && game.gameArray[8] === l ||
+            game.gameArray[0] === l && game.gameArray[4] === l && game.gameArray[8] === l ||
+            game.gameArray[2] === l && game.gameArray[4] === l && game.gameArray[6] === l) {
+                this.games.splice(index, 1);
                 return { status: "Partida finalizada", winner: l };
-        }
-        else if (this.game.turns <= 0) return { status: "Partida finalizada", winner: "Draw" }
-        else { return { status: "Ninguém ganhou ainda !" }; }
+        } else if (game.turns <= 0) {
+            this.games.splice(index, 1);
+            return { status: "Partida finalizada", winner: "Draw" }
+        } else { return { status: "Ninguém ganhou ainda !" }; }
     }
 
     public MovementUpdate(x: number, y: number): number {
@@ -86,15 +100,18 @@ export default class GameEngine {
         } else { return 9; }
     }
 
-    public ShowTikTakToe(): object {
-        if (this.game != null) {
-        return { id: this.game.id,
-        turn: this.game.nextPlayer,
-        lastTurns: this.game.turns,
-        table1: this.game.gameArray[0] + "|" + this.game.gameArray[1] + "|" + this.game.gameArray[2],
-        table2: this.game.gameArray[3] + "|" + this.game.gameArray[4] + "|" + this.game.gameArray[5],
-        table3: this.game.gameArray[6] + "|" + this.game.gameArray[7] + "|" + this.game.gameArray[8]};
+    public ShowTikTakToe(id: string): object {
+        for (let index = 0; index < this.games.length; index++) {
+            if (this.games[index].id === id) {
+                return {
+                    id: this.games[index].id,
+                    turn: this.games[index].nextPlayer,
+                    lastTurns: this.games[index].turns,
+                    table1: this.games[index].gameArray[0] + "|" + this.games[index].gameArray[1] + "|" + this.games[index].gameArray[2],
+                    table2: this.games[index].gameArray[3] + "|" + this.games[index].gameArray[4] + "|" + this.games[index].gameArray[5],
+                    table3: this.games[index].gameArray[6] + "|" + this.games[index].gameArray[7] + "|" + this.games[index].gameArray[8]};
+            }
         }
-        else return { msg: "Nenhum jogo criado" };
+        return { mgs: "Nenum jogo criado " };
     }
 }
