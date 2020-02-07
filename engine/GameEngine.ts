@@ -114,4 +114,14 @@ export default class GameEngine {
         }
         return { mgs: "Nenum jogo criado " };
     }
+
+    public GetGame(id: string): object {
+        for (let index = 0; index < this.games.length; index++) {
+            if (this.games[index].id === id) {
+                return {
+                    game: this.games[index].gameArray
+                };
+            }
+        }
+    }
 }

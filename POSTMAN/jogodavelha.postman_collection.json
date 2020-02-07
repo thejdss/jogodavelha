@@ -19,7 +19,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n \"id\" : \"1de7bd80-398d-11ea-a6dc-1d7263be8e94\",\r\n \"player\": \"x\",\r\n \"position\": {\r\n \"x\": 0,\r\n \"y\": 0\r\n }\r\n}",
+					"raw": "{\r\n \"id\" : \"id goes on params\",\r\n \"player\": \"x\",\r\n \"position\": {\r\n \"x\": 0,\r\n \"y\": 0\r\n }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -41,11 +41,10 @@
 					"variable": [
 						{
 							"key": "id",
-							"value": "1de7bd80-398d-11ea-a6dc-1d7263be8e94"
+							"value": ""
 						}
 					]
-				},
-				"description": "Rota que faz os movimentos, adicione o id do jogo no parametro id e mude o body com as informações da jogada."
+				}
 			},
 			"response": []
 		},
@@ -64,8 +63,7 @@
 					"path": [
 						"game"
 					]
-				},
-				"description": "Rota que inicia o Jogo, chame ela para receber o id do jogo."
+				}
 			},
 			"response": []
 		},
@@ -89,11 +87,37 @@
 					"variable": [
 						{
 							"key": "id",
-							"value": "1de7bd80-398d-11ea-a6dc-1d7263be8e94"
+							"value": ""
 						}
 					]
-				},
-				"description": "Rota que devolve o estado atual do jogo. Confira a partida nela."
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/game/get/:id",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/game/get/:id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"game",
+						"get",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": ""
+						}
+					]
+				}
 			},
 			"response": []
 		}

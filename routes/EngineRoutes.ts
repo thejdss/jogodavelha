@@ -16,7 +16,7 @@ app.post("/", async (req: any, res: any) => {
 
 app.post("/:id/movement", async (req: any, res: any) => {
     try {
-        var player: Player;
+        let player: Player;
         player = req.body;
 
         res.send(GameEngine.getInstance().CountRound(player, req.params.id));
@@ -30,6 +30,16 @@ app.post("/:id/movement", async (req: any, res: any) => {
 app.post("/show/:id", async (req: any, res: any) => {
     try {
         res.send(GameEngine.getInstance().ShowTikTakToe(req.params.id));
+
+        res.status(200);
+    } catch (e) {
+        res.status(500).send(e.toString());
+    }
+});
+
+app.post("/get/:id", async (req: any, res: any) => {
+    try {
+        res.send(GameEngine.getInstance().GetGame(req.params.id));
 
         res.status(200);
     } catch (e) {
